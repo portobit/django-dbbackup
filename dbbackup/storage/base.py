@@ -1,8 +1,9 @@
 """
 Abstract Storage class.
 """
+from importlib import import_module
+
 from django.conf import settings
-from django.utils.importlib import import_module
 
 class StorageError(Exception):
     pass
