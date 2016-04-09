@@ -1,3 +1,4 @@
+from __future__ import print_function
 """
 Save backup files to Dropbox.
 """
@@ -49,12 +50,12 @@ class Command(LabelCommand):
                 self.dbcommands = DBCommands(database)
                 self.save_new_backup(database)
                 self.cleanup_old_backups(database)
-        except StorageError, err:
+        except StorageError as err:
             raise CommandError(err)
 
     def save_new_backup(self, database):
         """ Save a new backup file. """
-        print "Backing Up Database: %s" % database['NAME']
+        print("Backing Up Database: {}".format(database['NAME']))
         output_file = tempfile.SpooledTemporaryFile(max_size=10 * 1024 * 1024)
         output_file.name = self.dbcommands.filename(self.servername)
         self.dbcommands.run_backup_commands(output_file)
@@ -68,8 +69,8 @@ class Command(LabelCommand):
             encrypted_file = utils.encrypt_file(output_file)
             output_file = encrypted_file
 
-        print "  Backup tempfile created: %s (%s)" % (output_file.name, utils.handle_size(output_file))
-        print "  Writing file to %s: %s" % (self.storage.name, self.storage.backup_dir())
+        print("  Backup tempfile created: %s (%s)".format(output_file.name, utils.handle_size(output_file)))
+        print("  Writing file to %s: %s".format(self.storage.name, self.storage.backup_dir()))
         self.storage.write_file(output_file)
 
     def cleanup_old_backups(self, database):
@@ -77,7 +78,7 @@ class Command(LabelCommand):
         DBBACKUP_CLEANUP_KEEP and any backups that occur on first of the month.
         """
         if self.clean:
-            print "Cleaning Old Backups for: %s" % database['NAME']
+            print("Cleaning Old Backups for: %s" % database['NAME'])
             filepaths = self.storage.list_directory()
             filepaths = self.dbcommands.filter_filepaths(filepaths)
             for filepath in sorted(filepaths[0:-CLEANUP_KEEP]):
@@ -85,7 +86,7 @@ class Command(LabelCommand):
                 datestr = re.findall(regex, filepath)[0]
                 dateTime = datetime.datetime.strptime(datestr, DATE_FORMAT)
                 if int(dateTime.strftime("%d")) != 1:
-                    print "  Deleting: %s" % filepath
+                    print("  Deleting: %s" % filepath)
                     self.storage.delete_file(filepath)
 
     def compress_file(self, input_file):
