@@ -1,3 +1,4 @@
+from __future__ import print_function, str
 """
 Process the Backup or Restore commands.
 """
@@ -205,7 +206,7 @@ class DBCommands:
             # filename = FILENAME_TEMPLATE.format(**params)
             filename = FILENAME_TEMPLATE
             for key, value in params.iteritems():
-                filename = filename.replace('{%s}' % key, unicode(value))
+                filename = filename.replace('{%s}' % key, str(value))
             filename = filename.replace('--', '-')
         return filename
 
@@ -256,7 +257,7 @@ class DBCommands:
         pstdin = stdin if command[-1] == '<' else None
         pstdout = stdout if command[-1] == '>' else devnull
         command = filter(lambda arg: arg not in ['<', '>'], command)
-        print self._clean_passwd("  Running: %s" % ' '.join(command))
+        print(self._clean_passwd("  Running: {}".format(' '.join(command))))
         process = Popen(command, stdin=pstdin, stdout=pstdout)
         process.wait()
         devnull.close()
@@ -265,12 +266,12 @@ class DBCommands:
 
     def read_file(self, filepath, stdout):
         """ Read the specified file to stdout. """
-        print "  Reading: %s" % filepath
+        print("  Reading: {}".format(filepath))
         with open(filepath, "rb") as f:
             copyfileobj(f, stdout)
 
     def write_file(self, filepath, stdin):
         """ Write the specified file from stdin. """
-        print "  Writing: %s" % filepath
+        print("  Writing: {}".format(filepath))
         with open(filepath, 'wb') as f:
             copyfileobj(stdin, f)
