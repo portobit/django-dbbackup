@@ -1,4 +1,5 @@
-from __future__ import print_function, str
+from __future__ import print_function
+from __future__.types import str
 """
 Process the Backup or Restore commands.
 """
