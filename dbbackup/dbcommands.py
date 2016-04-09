@@ -1,5 +1,4 @@
 from __future__ import print_function
-from __future__.types import str
 """
 Process the Backup or Restore commands.
 """
@@ -203,12 +202,7 @@ class DBCommands:
             filename = FILENAME_TEMPLATE(**params)
         else:
             params['datetime'] = wildcard or params['timestamp'].strftime(DATE_FORMAT)
-            # if Python 2.6 is okay, this line can replace the 4 below it:
-            # filename = FILENAME_TEMPLATE.format(**params)
-            filename = FILENAME_TEMPLATE
-            for key, value in params.iteritems():
-                filename = filename.replace('{%s}' % key, str(value))
-            filename = filename.replace('--', '-')
+            filename = FILENAME_TEMPLATE.format(**params)
         return filename
 
     def filename_match(self, servername=None, wildcard='*'):
